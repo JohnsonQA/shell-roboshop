@@ -1,7 +1,6 @@
 #!/bin/bash
 
 START_TIME=$(date +%s)
-echo -e "$M Script Staring .... $N" | tee -a $LOG_FILE
 USERID=$(id -u)
 R="\e[31m"
 G="\e[32m"
