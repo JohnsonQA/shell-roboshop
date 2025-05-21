@@ -45,8 +45,14 @@ VALIDATE $? "Enabled required nodejs version"
 dnf install nodejs -y &>>$LOG_FILE
 VALIDATE $? "Installed nodejs"
 
-useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
-VALIDATE $? "Created roboshop user"
+id roboshop
+if [ $? -ne 0 ]
+then
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+    VALIDATE $? "Created roboshop user"
+else
+    echo "User already exists... $M skipping $N"
+fi
 
 mkdir -p /app &>>$LOG_FILE
 VALIDATE $? "Created app dir"
@@ -55,6 +61,7 @@ VALIDATE $? "Created app dir"
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>>$LOG_FILE
 VALIDATE $? "Downloaded the catalogue service"
 
+rm -rf /app/*
 cd /app 
 unzip /tmp/catalogue.zip &>>$LOG_FILE
 VALIDATE $? "Unzipped the catalogue service"
